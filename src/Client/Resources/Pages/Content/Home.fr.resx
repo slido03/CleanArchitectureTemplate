@@ -121,9 +121,9 @@
     <value>À propos</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Le SGCPJ est un système destiné à permettre aux applications de l'OTR d'uniformiser le stockage et la gestion électronique des documents consommés par ces différentes applications.</value>
+    <value>Le SGCD est un système destiné à permettre à tout groupe d'applications d'uniformiser le stockage et la gestion électronique de leurs documents.</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Système de Gestion Centralisée des Pièces Jointes dans les Applications de l'Office Togolais des Recettes.</value>
+    <value>Système de Gestion Centralisée de Documents.</value>
   </data>
 </root>

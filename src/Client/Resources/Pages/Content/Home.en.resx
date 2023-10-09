@@ -121,9 +121,9 @@
     <value>About</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>The SGCPJ is a system intended to allow OTR applications to standardize the storage and electronic management of documents consumed by these different applications.</value>
+    <value>The SGCD is a system intended to allow any group of applications to standardize the storage and electronic management of their documents.</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Centralized Management System for Attachments in the Applications of the Togolese Revenue Office.</value>
+    <value>Centralized Management System for Documents.</value>
   </data>
 </root>
