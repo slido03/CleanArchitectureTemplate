@@ -36,7 +36,6 @@ namespace CleanArchitecture.Infrastructure.Shared.Services
                     validy = "",
                     deffered = "",
                     origin = _config.Origin,
-
                 });
             }
             catch (System.Exception ex)

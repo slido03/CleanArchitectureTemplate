@@ -3,7 +3,7 @@ using CleanArchitecture.Infrastructure.Models.Identity;
 
 namespace CleanArchitecture.Infrastructure.Specifications
 {
-    public class UserFilterSpecification : HeroSpecification<BlazorHeroUser>
+    public class UserFilterSpecification : HeroSpecification<User>
     {
         public UserFilterSpecification(string searchString)
         {

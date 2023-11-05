@@ -2,7 +2,6 @@
 using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Application.Requests.Mail;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -34,10 +33,11 @@ namespace CleanArchitecture.Infrastructure.Shared.Services
                         HtmlBody = request.Body
                     }.ToMessageBody()
                 };
+                email.From.Add(new MailboxAddress(_config.DisplayName, _config.From));
                 email.To.Add(MailboxAddress.Parse(request.To));
                 using var smtp = new SmtpClient();
-                await smtp.ConnectAsync(_config.Host, _config.Port, SecureSocketOptions.None);
-                // await smtp.AuthenticateAsync(_config.UserName, _config.Password);
+                await smtp.ConnectAsync(_config.Host, _config.Port, true);
+                await smtp.AuthenticateAsync(_config.UserName, _config.Password);
                 await smtp.SendAsync(email);
                 await smtp.DisconnectAsync(true);
             }

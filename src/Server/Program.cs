@@ -22,7 +22,7 @@ namespace CleanArchitecture.Server
 
                 try
                 {
-                    var context = services.GetRequiredService<BlazorHeroContext>();
+                    var context = services.GetRequiredService<DatabaseContext>();
 
                     if (context.Database.IsSqlServer())
                     {

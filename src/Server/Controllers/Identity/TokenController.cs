@@ -12,7 +12,7 @@ namespace CleanArchitecture.Server.Controllers.Identity
     {
         private readonly ITokenService _identityService;
 
-        public TokenController(ITokenService identityService, ICurrentUserService currentUserService)
+        public TokenController(ITokenService identityService)
         {
             _identityService = identityService;
         }

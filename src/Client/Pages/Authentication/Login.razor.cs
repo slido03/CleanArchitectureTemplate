@@ -11,7 +11,7 @@ namespace CleanArchitecture.Client.Pages.Authentication
     {
         private FluentValidationValidator _fluentValidationValidator;
         private bool Validated => _fluentValidationValidator.Validate(options => { options.IncludeAllRuleSets(); });
-        private TokenRequest _tokenModel = new();
+        private readonly TokenRequest _tokenModel = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -52,18 +52,6 @@ namespace CleanArchitecture.Client.Pages.Authentication
                 _passwordInputIcon = Icons.Material.Filled.Visibility;
                 _passwordInput = InputType.Text;
             }
-        }
-
-        private void FillAdministratorCredentials()
-        {
-            _tokenModel.Email = "mukesh@blazorhero.com";
-            _tokenModel.Password = "123Pa$$word!";
-        }
-
-        private void FillBasicUserCredentials()
-        {
-            _tokenModel.Email = "john@blazorhero.com";
-            _tokenModel.Password = "123Pa$$word!";
         }
     }
 }

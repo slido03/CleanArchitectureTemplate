@@ -135,4 +135,7 @@
   <data name="User Not Found." xml:space="preserve">
     <value>Utilisateur introuvable.</value>
   </data>
+  <data name="You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes" xml:space="preserve">
+    <value>Vous avez dépassé le nombre autorisé de tentatives de connexion. Votre compte a été bloqué pour {0} minutes</value>
+  </data>
 </root>

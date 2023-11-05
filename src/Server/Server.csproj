@@ -72,6 +72,7 @@
     <Folder Include="Files\Documents\ETAX\IMPÔT\" />
     <Folder Include="Files\Documents\GUDEF\ETAFI\" />
     <Folder Include="Files\Images\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="appsettings.json" />

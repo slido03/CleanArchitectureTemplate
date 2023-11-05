@@ -12,21 +12,34 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Infrastructure.Contexts
 {
-    public partial class BlazorHeroContext : AuditableContext
+    public class DatabaseContext : AuditableContext
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTimeService _dateTimeService;
 
-        public BlazorHeroContext(DbContextOptions<BlazorHeroContext> options, ICurrentUserService currentUserService, IDateTimeService dateTimeService)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options, ICurrentUserService currentUserService, IDateTimeService dateTimeService)
             : base(options)
         {
             _currentUserService = currentUserService;
             _dateTimeService = dateTimeService;
         }
 
-        public DbSet<ChatHistory<BlazorHeroUser>> ChatHistories { get; set; }
+        #region EntitiesDbSets
 
+        #region Sgcd DbSets
+
+        public DbSet<ExternalApplication> ExternalApplications { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
+        public DbSet<DocumentVersion> DocumentVersions { get; set; }
+        public DbSet<DocumentMatching> DocumentMatchings { get; set; }
         public DbSet<DocumentExtendedAttribute> DocumentExtendedAttributes { get; set; }
+
+        #endregion Sgcd DbSets
+
+        public DbSet<ChatHistory<User>> ChatHistories { get; set; }
+
+        #endregion EntitiesDbSets
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
@@ -72,7 +85,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
             }
 
             base.OnModelCreating(builder);
-            builder.Entity<ChatHistory<BlazorHeroUser>>(entity =>
+            builder.Entity<ChatHistory<User>>(entity =>
             {
                 entity.ToTable("ChatHistory");
 
@@ -86,13 +99,13 @@ namespace CleanArchitecture.Infrastructure.Contexts
                     .HasForeignKey(d => d.ToUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
-            builder.Entity<BlazorHeroUser>(entity =>
+            builder.Entity<User>(entity =>
             {
                 entity.ToTable(name: "Users", "Identity");
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
-            builder.Entity<BlazorHeroRole>(entity =>
+            builder.Entity<Role>(entity =>
             {
                 entity.ToTable(name: "Roles", "Identity");
             });
@@ -111,7 +124,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
                 entity.ToTable("UserLogins", "Identity");
             });
 
-            builder.Entity<BlazorHeroRoleClaim>(entity =>
+            builder.Entity<RoleClaim>(entity =>
             {
                 entity.ToTable(name: "RoleClaims", "Identity");
 
@@ -126,7 +139,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
                 entity.ToTable("UserTokens", "Identity");
             });
 
-            //Sgcpj model constraints
+            //Sgcd model constraints
             builder.Entity<ExternalApplication>()
                 .HasIndex(b => b.Name)
                 .IsUnique();
@@ -138,6 +151,12 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<DocumentMatching>()
                 .HasIndex(b => new { b.CentralizedDocumentId, b.ExternalId })
                 .IsUnique();
+        }
+
+        //configure lazyloading for nested entities
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace CleanArchitecture.Infrastructure.Mappings
     {
         public ChatHistoryProfile()
         {
-            CreateMap<ChatHistory<IChatUser>, ChatHistory<BlazorHeroUser>>().ReverseMap();
+            CreateMap<ChatHistory<IChatUser>, ChatHistory<User>>().ReverseMap();
         }
     }
 }

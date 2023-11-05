@@ -58,7 +58,7 @@ namespace CleanArchitecture.Client.Infrastructure.Managers.Identity.Authenticati
                     await _localStorage.SetItemAsync(StorageConstants.Local.UserImageURL, userImageURL);
                 }
 
-                await ((BlazorHeroStateProvider)this._authenticationStateProvider).StateChangedAsync();
+                await ((StateProvider)this._authenticationStateProvider).StateChangedAsync();
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -75,7 +75,7 @@ namespace CleanArchitecture.Client.Infrastructure.Managers.Identity.Authenticati
             await _localStorage.RemoveItemAsync(StorageConstants.Local.AuthToken);
             await _localStorage.RemoveItemAsync(StorageConstants.Local.RefreshToken);
             await _localStorage.RemoveItemAsync(StorageConstants.Local.UserImageURL);
-            ((BlazorHeroStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+            ((StateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
             return await Result.SuccessAsync();
         }

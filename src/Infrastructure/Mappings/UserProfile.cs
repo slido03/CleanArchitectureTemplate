@@ -8,8 +8,8 @@ namespace CleanArchitecture.Infrastructure.Mappings
     {
         public UserProfile()
         {
-            CreateMap<UserResponse, BlazorHeroUser>().ReverseMap();
-            CreateMap<ChatUserResponse, BlazorHeroUser>().ReverseMap()
+            CreateMap<UserResponse, User>().ReverseMap();
+            CreateMap<ChatUserResponse, User>().ReverseMap()
                 .ForMember(dest => dest.EmailAddress, source => source.MapFrom(source => source.Email)); //Specific Mapping
         }
     }

@@ -135,4 +135,7 @@
   <data name="User Not Found." xml:space="preserve">
     <value>User Not Found.</value>
   </data>
+  <data name="You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes" xml:space="preserve">
+    <value>You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes</value>
+  </data>
 </root>

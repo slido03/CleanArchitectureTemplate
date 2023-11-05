@@ -17,14 +17,14 @@ namespace CleanArchitecture.Infrastructure
     {
         private readonly ILogger<DatabaseSeeder> _logger;
         private readonly IStringLocalizer<DatabaseSeeder> _localizer;
-        private readonly BlazorHeroContext _db;
-        private readonly UserManager<BlazorHeroUser> _userManager;
-        private readonly RoleManager<BlazorHeroRole> _roleManager;
+        private readonly DatabaseContext _db;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public DatabaseSeeder(
-            UserManager<BlazorHeroUser> userManager,
-            RoleManager<BlazorHeroRole> roleManager,
-            BlazorHeroContext db,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager,
+            DatabaseContext db,
             ILogger<DatabaseSeeder> logger,
             IStringLocalizer<DatabaseSeeder> localizer)
         {
@@ -47,7 +47,7 @@ namespace CleanArchitecture.Infrastructure
             Task.Run(async () =>
             {
                 //Check if Role Exists
-                var adminRole = new BlazorHeroRole(RoleConstants.AdministratorRole, _localizer["Administrator role with full permissions"]);
+                var adminRole = new Role(RoleConstants.AdministratorRole, _localizer["Administrator role with full permissions"]);
                 var adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
                 if (adminRoleInDb == null)
                 {
@@ -56,12 +56,12 @@ namespace CleanArchitecture.Infrastructure
                     _logger.LogInformation(_localizer["Seeded Administrator Role."]);
                 }
                 //Check if User Exists
-                var superUser = new BlazorHeroUser
+                var superUser = new User
                 {
-                    FirstName = "Mukesh",
-                    LastName = "Murugan",
-                    Email = "mukesh@blazorhero.com",
-                    UserName = "mukesh",
+                    FirstName = "Lido",
+                    LastName = "Sleght",
+                    Email = "lidosleght@gmail.com",
+                    UserName = "slido",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     CreatedOn = DateTime.Now,
@@ -96,7 +96,7 @@ namespace CleanArchitecture.Infrastructure
             Task.Run(async () =>
             {
                 //Check if Role Exists
-                var basicRole = new BlazorHeroRole(RoleConstants.BasicRole, _localizer["Basic role with default permissions"]);
+                var basicRole = new Role(RoleConstants.BasicRole, _localizer["Basic role with default permissions"]);
                 var basicRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.BasicRole);
                 if (basicRoleInDb == null)
                 {
@@ -104,11 +104,11 @@ namespace CleanArchitecture.Infrastructure
                     _logger.LogInformation(_localizer["Seeded Basic Role."]);
                 }
                 //Check if User Exists
-                var basicUser = new BlazorHeroUser
+                var basicUser = new User
                 {
                     FirstName = "John",
                     LastName = "Doe",
-                    Email = "john@blazorhero.com",
+                    Email = "john@gmail.com",
                     UserName = "johndoe",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,

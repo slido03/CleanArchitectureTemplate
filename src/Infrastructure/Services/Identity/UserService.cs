@@ -5,13 +5,11 @@ using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Application.Interfaces.Services.Identity;
 using CleanArchitecture.Application.Requests.Identity;
 using CleanArchitecture.Application.Requests.Mail;
-using CleanArchitecture.Application.Requests.SMS;
 using CleanArchitecture.Application.Responses.Identity;
 using CleanArchitecture.Infrastructure.Models.Identity;
 using CleanArchitecture.Infrastructure.Specifications;
 using CleanArchitecture.Shared.Constants.Role;
 using CleanArchitecture.Shared.Wrapper;
-using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -28,22 +26,20 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<BlazorHeroUser> _userManager;
-        private readonly RoleManager<BlazorHeroRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IMailService _mailService;
-        private readonly ISMSService _smsService;
         private readonly IStringLocalizer<UserService> _localizer;
         private readonly IExcelService _excelService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
         public UserService(
-            UserManager<BlazorHeroUser> userManager,
+            UserManager<User> userManager,
             IMapper mapper,
-            RoleManager<BlazorHeroRole> roleManager,
+            RoleManager<Role> roleManager,
             IMailService mailService,
 
-            ISMSService smsService,
             IStringLocalizer<UserService> localizer,
             IExcelService excelService,
             ICurrentUserService currentUserService)
@@ -52,7 +48,6 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             _mapper = mapper;
             _roleManager = roleManager;
             _mailService = mailService;
-            _smsService = smsService;
             _localizer = localizer;
             _excelService = excelService;
             _currentUserService = currentUserService;
@@ -72,7 +67,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             {
                 return await Result.FailAsync(string.Format(_localizer["Username {0} is already taken."], request.UserName));
             }
-            var user = new BlazorHeroUser
+            var user = new User
             {
                 Email = request.Email,
                 FirstName = request.FirstName,
@@ -109,13 +104,8 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
                             Body = string.Format(_localizer["Please confirm your account by <a href='{0}'>clicking here</a>."], verificationUri),
                             Subject = _localizer["Confirm Registration"]
                         };
-                        var smsRequest = new SMSRequest
-                        {
-                            To = "+228" + request.PhoneNumber,
-                            Text = $"Code de Confirmation: {Guid.NewGuid().ToString().Substring(0, 6)}"
-                        };
-                        BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
-                        BackgroundJob.Enqueue(() => _smsService.SendAsync(smsRequest));
+                        await _mailService.SendAsync(mailRequest);
+                        //BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
                         return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered. Please check your Mailbox to verify!"], user.UserName));
                     }
                     return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered."], user.UserName));
@@ -131,7 +121,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             }
         }
 
-        private async Task<string> SendVerificationEmail(BlazorHeroUser user, string origin)
+        private async Task<string> SendVerificationEmail(User user, string origin)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -253,8 +243,8 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
                 Subject = _localizer["Reset Password"],
                 To = request.Email
             };
-            BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
-
+            await _mailService.SendAsync(mailRequest);
+            //BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
             return await Result.SuccessAsync(_localizer["Password Reset Mail has been sent to your authorized Email."]);
         }
 
@@ -292,7 +282,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
                 .OrderByDescending(a => a.CreatedOn)
                 .ToListAsync();
             var result = await _excelService.ExportAsync(users, sheetName: _localizer["Users"],
-                mappers: new Dictionary<string, Func<BlazorHeroUser, object>>
+                mappers: new Dictionary<string, Func<User, object>>
                 {
                     { _localizer["Id"], item => item.Id },
                     { _localizer["FirstName"], item => item.FirstName },

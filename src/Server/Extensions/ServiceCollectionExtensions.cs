@@ -23,6 +23,7 @@ using CleanArchitecture.Server.Settings;
 using CleanArchitecture.Shared.Constants.Application;
 using CleanArchitecture.Shared.Constants.Localization;
 using CleanArchitecture.Shared.Constants.Permission;
+using CleanArchitecture.Shared.Constants.User;
 using CleanArchitecture.Shared.Wrapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -157,7 +158,7 @@ namespace CleanArchitecture.Server.Extensions
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "BlazorHero.CleanArchitecture",
+                    Title = "CleanArchitecture",
                     License = new OpenApiLicense
                     {
                         Name = "MIT License",
@@ -214,7 +215,7 @@ namespace CleanArchitecture.Server.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
             => services
-                .AddDbContext<BlazorHeroContext>(options => options
+                .AddDbContext<DatabaseContext>(options => options
                     .UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
             .AddTransient<IDatabaseSeeder, DatabaseSeeder>();
 
@@ -228,16 +229,19 @@ namespace CleanArchitecture.Server.Extensions
         internal static IServiceCollection AddIdentity(this IServiceCollection services)
         {
             services
-                .AddIdentity<BlazorHeroUser, BlazorHeroRole>(options =>
+                .AddIdentity<User, Role>(options =>
                 {
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = UserConstants.RequiredPasswordLength;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
                     options.User.RequireUniqueEmail = true;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = UserConstants.MaxFailedAccessAttempts;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(UserConstants.DefaultLockoutTimeSpan);
                 })
-                .AddEntityFrameworkStores<BlazorHeroContext>()
+                .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
 
             return services;
@@ -247,9 +251,9 @@ namespace CleanArchitecture.Server.Extensions
         {
             services.AddTransient<IDateTimeService, SystemDateTimeService>();
             services.Configure<MailConfiguration>(configuration.GetSection("MailConfiguration"));
-            services.Configure<SMSConfiguration>(configuration.GetSection("SMSConfiguration"));
+           // services.Configure<SMSConfiguration>(configuration.GetSection("SMSConfiguration"));
             services.AddTransient<IMailService, SMTPMailService>();
-            services.AddTransient<ISMSService, SMSService>();
+           // services.AddTransient<ISMSService, SMSService>();
             return services;
         }
 

@@ -19,13 +19,13 @@ namespace CleanArchitecture.Infrastructure.Services
 {
     public class ChatService : IChatService
     {
-        private readonly BlazorHeroContext _context;
+        private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IStringLocalizer<ChatService> _localizer;
 
         public ChatService(
-            BlazorHeroContext context,
+            DatabaseContext context,
             IMapper mapper,
             IUserService userService,
             IStringLocalizer<ChatService> localizer)
@@ -79,7 +79,7 @@ namespace CleanArchitecture.Infrastructure.Services
         public async Task<IResult> SaveMessageAsync(ChatHistory<IChatUser> message)
         {
             message.ToUser = await _context.Users.Where(user => user.Id == message.ToUserId).FirstOrDefaultAsync();
-            await _context.ChatHistories.AddAsync(_mapper.Map<ChatHistory<BlazorHeroUser>>(message));
+            await _context.ChatHistories.AddAsync(_mapper.Map<ChatHistory<User>>(message));
             await _context.SaveChangesAsync();
             return await Result.SuccessAsync();
         }

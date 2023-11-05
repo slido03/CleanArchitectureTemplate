@@ -20,17 +20,17 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
 {
     public class RoleService : IRoleService
     {
-        private readonly RoleManager<BlazorHeroRole> _roleManager;
-        private readonly UserManager<BlazorHeroUser> _userManager;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
         private readonly IRoleClaimService _roleClaimService;
         private readonly IStringLocalizer<RoleService> _localizer;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
         public RoleService(
-            RoleManager<BlazorHeroRole> roleManager,
+            RoleManager<Role> roleManager,
             IMapper mapper,
-            UserManager<BlazorHeroUser> userManager,
+            UserManager<User> userManager,
             IRoleClaimService roleClaimService,
             IStringLocalizer<RoleService> localizer,
             ICurrentUserService currentUserService)
@@ -48,24 +48,16 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             var existingRole = await _roleManager.FindByIdAsync(id);
             if (existingRole.Name != RoleConstants.AdministratorRole && existingRole.Name != RoleConstants.BasicRole)
             {
-                bool roleIsNotUsed = true;
                 var allUsers = await _userManager.Users.ToListAsync();
                 foreach (var user in allUsers)
                 {
                     if (await _userManager.IsInRoleAsync(user, existingRole.Name))
                     {
-                        roleIsNotUsed = false;
+                        return await Result<string>.SuccessAsync(string.Format(_localizer["Not allowed to delete {0} Role as it is being used."], existingRole.Name));
                     }
                 }
-                if (roleIsNotUsed)
-                {
-                    await _roleManager.DeleteAsync(existingRole);
-                    return await Result<string>.SuccessAsync(string.Format(_localizer["Role {0} Deleted."], existingRole.Name));
-                }
-                else
-                {
-                    return await Result<string>.SuccessAsync(string.Format(_localizer["Not allowed to delete {0} Role as it is being used."], existingRole.Name));
-                }
+                await _roleManager.DeleteAsync(existingRole);
+                return await Result<string>.SuccessAsync(string.Format(_localizer["Role {0} Deleted."], existingRole.Name));
             }
             else
             {
@@ -123,7 +115,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             return await Result<PermissionResponse>.SuccessAsync(model);
         }
 
-        private List<RoleClaimResponse> GetAllPermissions()
+        private static List<RoleClaimResponse> GetAllPermissions()
         {
             var allPermissions = new List<RoleClaimResponse>();
 
@@ -149,7 +141,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             {
                 var existingRole = await _roleManager.FindByNameAsync(request.Name);
                 if (existingRole != null) return await Result<string>.FailAsync(_localizer["Similar Role already exists."]);
-                var response = await _roleManager.CreateAsync(new BlazorHeroRole(request.Name, request.Description));
+                var response = await _roleManager.CreateAsync(new Role(request.Name, request.Description));
                 if (response.Succeeded)
                 {
                     return await Result<string>.SuccessAsync(string.Format(_localizer["Role {0} Created."], request.Name));

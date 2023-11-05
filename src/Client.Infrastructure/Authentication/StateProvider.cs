@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Client.Infrastructure.Authentication
 {
-    public class BlazorHeroStateProvider : AuthenticationStateProvider
+    public class StateProvider : AuthenticationStateProvider
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorage;
 
-        public BlazorHeroStateProvider(
+        public StateProvider(
             HttpClient httpClient,
             ILocalStorageService localStorage)
         {
@@ -64,7 +64,7 @@ namespace CleanArchitecture.Client.Infrastructure.Authentication
             return state;
         }
 
-        private IEnumerable<Claim> GetClaimsFromJwt(string jwt)
+        private static IEnumerable<Claim> GetClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
@@ -111,7 +111,7 @@ namespace CleanArchitecture.Client.Infrastructure.Authentication
             return claims;
         }
 
-        private byte[] ParseBase64WithoutPadding(string payload)
+        private static byte[] ParseBase64WithoutPadding(string payload)
         {
             payload = payload.Trim().Replace('-', '+').Replace('_', '/');
             var base64 = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');

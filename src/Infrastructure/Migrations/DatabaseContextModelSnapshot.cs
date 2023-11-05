@@ -4,18 +4,16 @@ using CleanArchitecture.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace CleanArchitecture.Infrastructure.Migrations
 {
-    [DbContext(typeof(BlazorHeroContext))]
-    [Migration("20231004103626_Initial")]
-    partial class Initial
+    [DbContext(typeof(DatabaseContext))]
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +22,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("CleanArchitecture.Application.Models.Chat.ChatHistory<CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser>", b =>
+            modelBuilder.Entity("CleanArchitecture.Application.Models.Chat.ChatHistory<CleanArchitecture.Infrastructure.Models.Identity.User>", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -343,7 +341,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("AuditTrails");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRole", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.Role", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -385,7 +383,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("Roles", "Identity");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRoleClaim", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.RoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -428,7 +426,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("RoleClaims", "Identity");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.User", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -611,13 +609,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("UserTokens", "Identity");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Application.Models.Chat.ChatHistory<CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser>", b =>
+            modelBuilder.Entity("CleanArchitecture.Application.Models.Chat.ChatHistory<CleanArchitecture.Infrastructure.Models.Identity.User>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", "FromUser")
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", "FromUser")
                         .WithMany("ChatHistoryFromUsers")
                         .HasForeignKey("FromUserId");
 
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", "ToUser")
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", "ToUser")
                         .WithMany("ChatHistoryToUsers")
                         .HasForeignKey("ToUserId");
 
@@ -681,9 +679,9 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Navigation("Document");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRoleClaim", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.RoleClaim", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRole", "Role")
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.Role", "Role")
                         .WithMany("RoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -694,7 +692,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", null)
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -703,7 +701,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", null)
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -712,13 +710,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRole", null)
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", null)
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -727,7 +725,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", null)
+                    b.HasOne("CleanArchitecture.Infrastructure.Models.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -743,12 +741,12 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Navigation("ExtendedAttributes");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroRole", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.Role", b =>
                 {
                     b.Navigation("RoleClaims");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.BlazorHeroUser", b =>
+            modelBuilder.Entity("CleanArchitecture.Infrastructure.Models.Identity.User", b =>
                 {
                     b.Navigation("ChatHistoryFromUsers");
 

@@ -3,6 +3,7 @@ using CleanArchitecture.Application.Interfaces.Services.Identity;
 using CleanArchitecture.Application.Requests.Identity;
 using CleanArchitecture.Application.Responses.Identity;
 using CleanArchitecture.Infrastructure.Models.Identity;
+using CleanArchitecture.Shared.Constants.User;
 using CleanArchitecture.Shared.Wrapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
@@ -21,23 +22,18 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
 {
     public class IdentityService : ITokenService
     {
-        private const string InvalidErrorMessage = "Invalid email or password.";
-
-        private readonly UserManager<BlazorHeroUser> _userManager;
-        private readonly RoleManager<BlazorHeroRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly AppConfiguration _appConfig;
-        private readonly SignInManager<BlazorHeroUser> _signInManager;
         private readonly IStringLocalizer<IdentityService> _localizer;
 
         public IdentityService(
-            UserManager<BlazorHeroUser> userManager, RoleManager<BlazorHeroRole> roleManager,
-            IOptions<AppConfiguration> appConfig, SignInManager<BlazorHeroUser> signInManager,
-            IStringLocalizer<IdentityService> localizer)
+            UserManager<User> userManager, RoleManager<Role> roleManager,
+            IOptions<AppConfiguration> appConfig, IStringLocalizer<IdentityService> localizer)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _appConfig = appConfig.Value;
-            _signInManager = signInManager;
             _localizer = localizer;
         }
 
@@ -59,6 +55,12 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!passwordValid)
             {
+                await _userManager.AccessFailedAsync(user);
+                if (await _userManager.IsLockedOutAsync(user))
+                {
+                    return await Result<TokenResponse>.FailAsync(string.Format(_localizer["You've exceeded the allowed number of " +
+                        "login attempts. Your account has been locked out for {0} minutes"], UserConstants.DefaultLockoutTimeSpan));
+                }
                 return await Result<TokenResponse>.FailAsync(_localizer["Invalid Credentials."]);
             }
 
@@ -92,13 +94,53 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             return await Result<TokenResponse>.SuccessAsync(response);
         }
 
-        private async Task<string> GenerateJwtAsync(BlazorHeroUser user)
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RoleClaimType = ClaimTypes.Role,
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = false
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException(_localizer["Invalid token"]);
+            }
+
+            return principal;
+        }
+
+        private async Task<string> GenerateJwtAsync(User user)
         {
             var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
             return token;
         }
 
-        private async Task<IEnumerable<Claim>> GetClaimsAsync(BlazorHeroUser user)
+        private static string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
+        {
+            var token = new JwtSecurityToken(
+               claims: claims,
+               expires: DateTime.UtcNow.AddDays(2),
+               signingCredentials: signingCredentials);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var encryptedToken = tokenHandler.WriteToken(token);
+            return encryptedToken;
+        }
+
+        private SigningCredentials GetSigningCredentials()
+        {
+            var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
+            return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
+        }
+
+        private async Task<IEnumerable<Claim>> GetClaimsAsync(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -127,52 +169,12 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             return claims;
         }
 
-        private string GenerateRefreshToken()
+        private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
+            using var randomNumberGenerator = RandomNumberGenerator.Create();
+            randomNumberGenerator.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
-        }
-
-        private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
-        {
-            var token = new JwtSecurityToken(
-               claims: claims,
-               expires: DateTime.UtcNow.AddDays(2),
-               signingCredentials: signingCredentials);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var encryptedToken = tokenHandler.WriteToken(token);
-            return encryptedToken;
-        }
-
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                RoleClaimType = ClaimTypes.Role,
-                ClockSkew = TimeSpan.Zero,
-                ValidateLifetime = false
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new SecurityTokenException(_localizer["Invalid token"]);
-            }
-
-            return principal;
-        }
-
-        private SigningCredentials GetSigningCredentials()
-        {
-            var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
-            return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
         }
     }
 }
