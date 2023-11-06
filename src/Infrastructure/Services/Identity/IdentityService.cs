@@ -52,6 +52,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             {
                 return await Result<TokenResponse>.FailAsync(_localizer["E-Mail not confirmed."]);
             }
+
             var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!passwordValid)
             {
@@ -64,6 +65,11 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
                 return await Result<TokenResponse>.FailAsync(_localizer["Invalid Credentials."]);
             }
 
+            if((user.LockoutEnd != null) && (user.LockoutEnd > DateTime.UtcNow)) 
+            {
+                return await Result<TokenResponse>.FailAsync(_localizer["Your account is locked out. Please wait a moment and try again or contact the administrator"]);
+            }
+
             user.RefreshToken = GenerateRefreshToken();
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
@@ -71,6 +77,20 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             var token = await GenerateJwtAsync(user);
             var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, UserImageURL = user.ProfilePictureDataUrl };
             return await Result<TokenResponse>.SuccessAsync(response);
+        }
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var randomNumberGenerator = RandomNumberGenerator.Create();
+            randomNumberGenerator.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private async Task<string> GenerateJwtAsync(User user)
+        {
+            var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
+            return token;
         }
 
         public async Task<Result<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest model)
@@ -113,14 +133,7 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             {
                 throw new SecurityTokenException(_localizer["Invalid token"]);
             }
-
             return principal;
-        }
-
-        private async Task<string> GenerateJwtAsync(User user)
-        {
-            var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
-            return token;
         }
 
         private static string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
@@ -167,14 +180,6 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
             .Union(permissionClaims);
 
             return claims;
-        }
-
-        private static string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using var randomNumberGenerator = RandomNumberGenerator.Create();
-            randomNumberGenerator.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
         }
     }
 }

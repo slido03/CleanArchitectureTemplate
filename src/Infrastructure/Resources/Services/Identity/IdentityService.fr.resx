@@ -136,6 +136,9 @@
     <value>Utilisateur introuvable.</value>
   </data>
   <data name="You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes" xml:space="preserve">
-    <value>Vous avez dépassé le nombre autorisé de tentatives de connexion. Votre compte a été bloqué pour {0} minutes</value>
+    <value>Vous avez dépassé le nombre autorisé de tentatives de connexion. Votre compte a été verrouillé pour {0} minutes</value>
+  </data>
+  <data name="Your account is locked out. Please wait a moment and try again or contact the administrator" xml:space="preserve">
+    <value>Votre compte est verrouillé. Veuillez patienter un moment et réessayer ou contacter l'administrateur</value>
   </data>
 </root>

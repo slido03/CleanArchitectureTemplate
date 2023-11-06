@@ -138,4 +138,7 @@
   <data name="You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes" xml:space="preserve">
     <value>You've exceeded the allowed number of login attempts. Your account has been locked out for {0} minutes</value>
   </data>
+  <data name="Your account is locked out. Please wait a moment and try again or contact the administrator" xml:space="preserve">
+    <value>Your account is locked out. Please wait a moment and try again or contact the administrator</value>
+  </data>
 </root>
