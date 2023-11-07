@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Application.Interfaces.Repositories;
-using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Domain.Contracts;
 using CleanArchitecture.Infrastructure.Contexts;
 using LazyCache;
@@ -13,23 +12,20 @@ namespace CleanArchitecture.Infrastructure.Repositories
 {
     public class UnitOfWork<TId> : IUnitOfWork<TId>
     {
-        private readonly ICurrentUserService _currentUserService;
         private readonly DatabaseContext _dbContext;
         private bool disposed;
         private Hashtable _repositories;
         private readonly IAppCache _cache;
 
-        public UnitOfWork(DatabaseContext dbContext, ICurrentUserService currentUserService, IAppCache cache)
+        public UnitOfWork(DatabaseContext dbContext, IAppCache cache)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _currentUserService = currentUserService;
             _cache = cache;
         }
 
         public IRepositoryAsync<TEntity, TId> Repository<TEntity>() where TEntity : AuditableEntity<TId>
         {
-            if (_repositories == null)
-                _repositories = new Hashtable();
+            _repositories ??= new Hashtable();
 
             var type = typeof(TEntity).Name;
 
@@ -41,7 +37,6 @@ namespace CleanArchitecture.Infrastructure.Repositories
 
                 _repositories.Add(type, repositoryInstance);
             }
-
             return (IRepositoryAsync<TEntity, TId>)_repositories[type];
         }
 

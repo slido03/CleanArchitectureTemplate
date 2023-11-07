@@ -9,12 +9,10 @@ namespace CleanArchitecture.Infrastructure.Extensions
     {
         public static StringContent ToStringContent(this Object o)
         {
-
             string json = JsonSerializer.Serialize(o, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
-
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }

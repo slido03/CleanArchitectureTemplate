@@ -38,7 +38,6 @@ namespace CleanArchitecture.Server
                     throw;
                 }
             }
-
             await host.RunAsync();
         }
 

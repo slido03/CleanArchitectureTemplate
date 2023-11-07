@@ -10,7 +10,7 @@ namespace CleanArchitecture.Application.Extensions
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
             ParameterExpression p = left.Parameters.First();
-            SubstExpressionVisitor visitor = new SubstExpressionVisitor
+            SubstExpressionVisitor visitor = new()
             {
                 Subst = { [right.Parameters.First()] = p }
             };
@@ -23,7 +23,7 @@ namespace CleanArchitecture.Application.Extensions
         {
 
             ParameterExpression p = left.Parameters.First();
-            SubstExpressionVisitor visitor = new SubstExpressionVisitor
+            SubstExpressionVisitor visitor = new()
             {
                 Subst = { [right.Parameters.First()] = p }
             };

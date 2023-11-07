@@ -9,7 +9,7 @@ namespace CleanArchitecture.Infrastructure.Services.Storage.Provider
     internal class ServerStorageProvider : IStorageProvider
     {
         //TODO - replace on implementation (added for tests)
-        private Dictionary<string, string> _storage = new();
+        private readonly Dictionary<string, string> _storage = new();
 
         //private readonly IJSRuntime _jSRuntime;
         //private readonly IJSInProcessRuntime _jSInProcessRuntime;
@@ -68,7 +68,6 @@ namespace CleanArchitecture.Infrastructure.Services.Storage.Provider
             //throw new NotImplementedException();
             ////_jSRuntime.InvokeVoidAsync("localStorage.setItem", key, data);
         }
-
 
         public void Clear()
         {

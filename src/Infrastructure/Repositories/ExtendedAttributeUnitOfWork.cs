@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Application.Interfaces.Repositories;
-using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Domain.Contracts;
 using CleanArchitecture.Infrastructure.Contexts;
 using LazyCache;
@@ -13,23 +12,20 @@ namespace CleanArchitecture.Infrastructure.Repositories
 {
     public class ExtendedAttributeUnitOfWork<TId, TEntityId, TEntity> : IExtendedAttributeUnitOfWork<TId, TEntityId, TEntity> where TEntity : AuditableEntity<TEntityId>
     {
-        private readonly ICurrentUserService _currentUserService;
         private readonly DatabaseContext _dbContext;
         private bool _disposed;
         private Hashtable _repositories;
         private readonly IAppCache _cache;
 
-        public ExtendedAttributeUnitOfWork(DatabaseContext dbContext, ICurrentUserService currentUserService, IAppCache cache)
+        public ExtendedAttributeUnitOfWork(DatabaseContext dbContext, IAppCache cache)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _currentUserService = currentUserService;
             _cache = cache;
         }
 
         public IRepositoryAsync<T, TId> Repository<T>() where T : AuditableEntityExtendedAttribute<TId, TEntityId, TEntity>
         {
-            if (_repositories == null)
-                _repositories = new Hashtable();
+            _repositories ??= new Hashtable();
 
             var type = typeof(T).Name;
 

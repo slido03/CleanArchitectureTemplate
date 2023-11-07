@@ -28,7 +28,6 @@ namespace CleanArchitecture.Application.Serialization.JsonConverters
             {
                 throw new FormatException($"Input timespan is not in an expected format : expected {Regex.Unescape(TimeSpanFormatString)}. Please retrieve this key as a string and parse manually.");
             }
-
             return parsedTimeSpan;
         }
 

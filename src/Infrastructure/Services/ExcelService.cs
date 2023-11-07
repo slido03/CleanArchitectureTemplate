@@ -28,7 +28,7 @@ namespace CleanArchitecture.Infrastructure.Services
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var p = new ExcelPackage();
-            p.Workbook.Properties.Author = "BlazorHero";
+            p.Workbook.Properties.Author = "CleanArchitecture";
             p.Workbook.Worksheets.Add(_localizer["Audit Trails"]);
             var ws = p.Workbook.Worksheets[0];
             ws.Name = sheetName;
@@ -137,7 +137,6 @@ namespace CleanArchitecture.Infrastructure.Services
                     return await Result<IEnumerable<TEntity>>.FailAsync(_localizer[e.Message]);
                 }
             }
-
             return await Result<IEnumerable<TEntity>>.SuccessAsync(result, _localizer["Import Success"]);
         }
     }

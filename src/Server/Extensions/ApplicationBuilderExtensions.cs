@@ -26,7 +26,6 @@ namespace CleanArchitecture.Server.Extensions
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
             }
-
             return app;
         }
 
@@ -38,7 +37,6 @@ namespace CleanArchitecture.Server.Extensions
                 app.UseCors();
                 app.UseForwardedHeaders();
             }
-
             return app;
         }
 
@@ -74,7 +72,6 @@ namespace CleanArchitecture.Server.Extensions
             });
 
             app.UseMiddleware<RequestCultureMiddleware>();
-
             return app;
         }
 
@@ -88,7 +85,6 @@ namespace CleanArchitecture.Server.Extensions
             {
                 initializer.Initialize();
             }
-
             return app;
         }
 

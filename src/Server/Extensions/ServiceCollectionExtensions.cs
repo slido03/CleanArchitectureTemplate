@@ -95,7 +95,6 @@ namespace CleanArchitecture.Server.Extensions
                         });
                 });
             }
-
             return services;
         }
 
@@ -138,6 +137,7 @@ namespace CleanArchitecture.Server.Extensions
             {
                 //Lowercase Swagger Documents
                 //Refer - https://gist.github.com/rafalkasa/01d5e3b265e5aa075678e0adfd54e23f
+
                 c.DocumentFilter<LowercaseDocumentFilter>();
 
                 // include all project's xml comments

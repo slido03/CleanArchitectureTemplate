@@ -66,11 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\v1\Sgcd\" />
-    <Folder Include="Files\Documents\DCCFE\LOTISSEMENT\" />
-    <Folder Include="Files\Documents\DCCFE\TITRE FONCIER\" />
-    <Folder Include="Files\Documents\ETAX\DÉCLARATION\" />
-    <Folder Include="Files\Documents\ETAX\IMPÔT\" />
-    <Folder Include="Files\Documents\GUDEF\ETAFI\" />
+    <Folder Include="Files\Documents\" />
     <Folder Include="Files\Images\" />
     <Folder Include="Logs\" />
   </ItemGroup>

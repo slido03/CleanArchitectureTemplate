@@ -35,7 +35,6 @@ namespace CleanArchitecture.Server.Middlewares
                     CultureInfo.CurrentUICulture = culture;
                 }
             }
-
             await _next(context);
         }
     }

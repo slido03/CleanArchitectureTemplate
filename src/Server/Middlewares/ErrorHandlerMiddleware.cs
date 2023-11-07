@@ -30,23 +30,12 @@ namespace CleanArchitecture.Server.Middlewares
                 response.ContentType = "application/json";
                 var responseModel = await Result<string>.FailAsync(error.Message);
 
-                switch (error)
+                response.StatusCode = error switch
                 {
-                    case ApiException e:
-                        // custom application error
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-
-                    case KeyNotFoundException e:
-                        // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-
-                    default:
-                        // unhandled error
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
-                }
+                    ApiException => (int)HttpStatusCode.BadRequest,// custom application error
+                    KeyNotFoundException => (int)HttpStatusCode.NotFound,// not found error
+                    _ => (int)HttpStatusCode.InternalServerError,// unhandled error
+                };
                 var result = JsonSerializer.Serialize(responseModel);
                 await response.WriteAsync(result);
             }
