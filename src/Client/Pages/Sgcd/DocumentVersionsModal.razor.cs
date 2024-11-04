@@ -100,11 +100,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Small,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>(_localizer["Deletion"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 var response = await DocumentVersionManager.DeleteAsync(id);
                 if (response.Succeeded)
@@ -135,11 +135,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Small,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<Shared.Dialogs.RestoreConfirmation>(_localizer["Restoration"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 var command = new RestoreDocumentVersionCommand() { DocumentId = DocumentId, DocumentVersionId = id };
                 var response = await DocumentManager.RestoreVersionAsync(command);

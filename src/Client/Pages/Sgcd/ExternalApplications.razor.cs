@@ -114,11 +114,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Medium,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<AddEditExternalApplicationModal>(id == 0 ? _localizer["Create"] : _localizer["Edit"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 OnSearch("");
             }
@@ -136,11 +136,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Small,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>(_localizer["Deletion"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 var response = await ExternalApplicationManager.DeleteAsync(id);
                 if (response.Succeeded)
@@ -203,11 +203,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Small,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<ImportExcelModal>(_localizer["Import External Applications"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 OnSearch("");
             }

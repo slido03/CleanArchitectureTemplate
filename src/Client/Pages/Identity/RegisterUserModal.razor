@@ -32,12 +32,12 @@
                 <MudItem xs="12" md="6">
                     <MudTextField For="@(() => _registerUserModel.ConfirmPassword)" InputType="InputType.Password" @bind-Value="_registerUserModel.ConfirmPassword" Label="@_localizer["Confirm Password"]" />
                 </MudItem>
-                <MudItem xs="12" md="6">
+                @* <MudItem xs="12" md="6">
                     <MudCheckBox @bind-Checked="@_registerUserModel.ActivateUser" Label="@_localizer["Activate User?"]" Color="Color.Primary"></MudCheckBox>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudCheckBox @bind-Checked="@_registerUserModel.AutoConfirmEmail" Label="@_localizer["Auto Confirm Email?"]" Color="Color.Primary"></MudCheckBox>
-                </MudItem>
+                </MudItem> *@
             </MudGrid>
         </DialogContent>
         <DialogActions>

@@ -174,10 +174,10 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                     });
                 }
             }
-            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
             var dialog = _dialogService.Show<AddEditDocumentModal>(id == Guid.Empty ? _localizer["Create"] : _localizer["Edit"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 await _table.ReloadServerData();
             }
@@ -195,11 +195,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Large,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<DocumentVersionsModal>(_localizer["Document Versions"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 await _table.ReloadServerData();
             }
@@ -217,11 +217,11 @@ namespace CleanArchitecture.Client.Pages.Sgcd
                 CloseButton = true,
                 MaxWidth = MaxWidth.Small,
                 FullWidth = true,
-                DisableBackdropClick = true
+                BackdropClick = false
             };
             var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>(_localizer["Deletion"], parameters, options);
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 var response = await DocumentManager.DeleteAsync(id);
                 if (response.Succeeded)
