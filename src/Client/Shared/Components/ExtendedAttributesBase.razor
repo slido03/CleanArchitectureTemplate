@@ -1,4 +1,4 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ExtendedAttributesLocalization> _localizer
+﻿@* @inject Microsoft.Extensions.Localization.IStringLocalizer<ExtendedAttributesLocalization> _localizer
 
 @using CleanArchitecture.Domain.Enums
 
@@ -53,11 +53,11 @@ else
                         {
                             <MudTHeadRow IgnoreCheckbox="true">
                                 <MudTh colspan="6">
-@*                                     <MudSwitch @bind-Checked="@_includeEntity" Color="Color.Primary" Style="margin-left: 5px;">@_localizer["Include Entity fields (Export)"]</MudSwitch>
- *@                                </MudTh>
+                                    <MudSwitch @bind-Checked="@_includeEntity" Color="Color.Primary" Style="margin-left: 5px;">@_localizer["Include Entity fields (Export)"]</MudSwitch>
+                                </MudTh>
                                 <MudTh colspan="5">
-@*                                     <MudSwitch @bind-Checked="@_onlyCurrentGroup" Color="Color.Primary" Style="margin-left: 5px;">@_localizer["Only Selected Group (Export)"]</MudSwitch>
- *@                                </MudTh>
+                                    <MudSwitch @bind-Checked="@_onlyCurrentGroup" Color="Color.Primary" Style="margin-left: 5px;">@_localizer["Only Selected Group (Export)"]</MudSwitch>
+                                </MudTh>
                             </MudTHeadRow>
                         }
                         <MudTHeadRow IgnoreCheckbox="true">
@@ -108,8 +108,8 @@ else
                         <MudTd DataLabel="@_localizer["Description"]">
                             <MudHighlighter Text="@context.Description" HighlightedText="@_searchString" />
                         </MudTd>
-@*                         <MudTd DataLabel="@_localizer["Is Active"]"><MudCheckBox ReadOnly @bind-Checked="@context.IsActive" Disabled="@(!_canEditExtendedAttributes)" Color="Color.Secondary" /></MudTd>
- *@                        <MudTd DataLabel="@_localizer["Owner"]">
+                        <MudTd DataLabel="@_localizer["Is Active"]"><MudCheckBox ReadOnly @bind-Checked="@context.IsActive" Disabled="@(!_canEditExtendedAttributes)" Color="Color.Secondary" /></MudTd>
+                        <MudTd DataLabel="@_localizer["Owner"]">
                             @if (context.CreatedBy == CurrentUserId)
                             {
                                 <MudButton Variant="Variant.Filled"
@@ -153,9 +153,9 @@ else
                         </MudTd>
                     </RowTemplate>
                     <FooterContent>
-                        @* <MudSwitch @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">@_localizer["Dense"]</MudSwitch>
+                        <MudSwitch @bind-Checked="@_dense" Color="Color.Secondary" Style="margin-left: 5px;">@_localizer["Dense"]</MudSwitch>
                         <MudSwitch @bind-Checked="@_striped" Color="Color.Tertiary" Style="margin-left: 5px;">@_localizer["Striped"]</MudSwitch>
-                        <MudSwitch @bind-Checked="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">@_localizer["Bordered"]</MudSwitch> *@
+                        <MudSwitch @bind-Checked="@_bordered" Color="Color.Warning" Style="margin-left: 5px;">@_localizer["Bordered"]</MudSwitch>
                     </FooterContent>
                     <PagerContent>
                         <TablePager />
@@ -164,4 +164,4 @@ else
             </MudTabPanel>
         }
     </MudTabs>
-}
+} *@

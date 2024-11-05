@@ -14,7 +14,7 @@
 
     @if (_canViewExternalApplications || _canViewDocumentTypes || _canViewDocuments || _canViewDocumentMatchings)
     {
-        <MudNavGroup Title=@_localizer["Document Management"] @bind-Expanded="listeMenu[0]" onclick="@(()=>changeExpend(0))" Icon="@Icons.Outlined.FolderSpecial" Color="Color.Error">
+        <MudNavGroup Title=@_localizer["Document Management"] @bind-Expanded="listeMenu[0]" onclick="@(()=>changeExpend(0))" Icon="@Icons.Material.Outlined.FolderSpecial" Color="Color.Error">
             @if(_canViewExternalApplications)
             {
                 <MudNavLink Href="/external-applications" Icon="@Icons.Material.Outlined.Apps">
@@ -46,7 +46,7 @@
     @if (_canViewUsers || _canViewRoles || _canViewAuditTrails)
     {
 
-        <MudNavGroup Title=@_localizer["Administrator"] @bind-Expanded="listeMenu[1]" onclick="@(()=>changeExpend(1))" Icon="@Icons.Outlined.VerifiedUser" Color="Color.Error">
+        <MudNavGroup Title=@_localizer["Administrator"] @bind-Expanded="listeMenu[1]" onclick="@(()=>changeExpend(1))" Icon="@Icons.Material.Outlined.VerifiedUser" Color="Color.Error">
 
             @if (_canViewUsers)
             {

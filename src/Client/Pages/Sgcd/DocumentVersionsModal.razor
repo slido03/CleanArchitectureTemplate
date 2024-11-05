@@ -1,4 +1,4 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<DocumentVersionsModal> _localizer
+﻿@* @inject Microsoft.Extensions.Localization.IStringLocalizer<DocumentVersionsModal> _localizer
 @using CleanArchitecture.Application.Features.DocumentVersions.Queries.GetAllByDocument
 
 <style>
@@ -102,4 +102,4 @@
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Close">@_localizer["Close"]</MudButton>
     </DialogActions>
-</MudDialog>
+</MudDialog> *@

@@ -1,4 +1,4 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ImportExcelModal> _localizer
+﻿@* @inject Microsoft.Extensions.Localization.IStringLocalizer<ImportExcelModal> _localizer
 
 <EditForm Model="@UploadRequest" OnValidSubmit="SaveAsync">
     <FluentValidationValidator @ref="_fluentValidationValidator" />
@@ -41,4 +41,4 @@
     <MudOverlay Visible="_uploading" LightBackground="true" Absolute="true">
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     </MudOverlay>
-</EditForm>
+</EditForm> *@

@@ -1,4 +1,4 @@
-﻿@page "/document-matchings"
+﻿@* @page "/document-matchings"
 @attribute [Authorize(Policy = Permissions.DocumentMatchings.View)]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<DocumentMatchings> _localizer
 @using CleanArchitecture.Application.Features.DocumentMatchings.Queries.GetAll
@@ -70,4 +70,4 @@ else
             <TablePager />
         </PagerContent>
     </MudTable>
-}
+} *@

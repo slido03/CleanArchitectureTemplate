@@ -1,4 +1,4 @@
-﻿@page "/document-store"
+﻿@* @page "/document-store"
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<DocumentStore> _localizer
 @using CleanArchitecture.Application.Features.Documents.Queries.GetAll
@@ -121,4 +121,4 @@ else
             <TablePager />
         </PagerContent>
     </MudTable>
-}
+} *@

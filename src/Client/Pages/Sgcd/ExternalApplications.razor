@@ -1,4 +1,4 @@
-﻿@page "/external-applications"
+﻿@* @page "/external-applications"
 @attribute [Authorize(Policy = Permissions.ExternalApplications.View)]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ExternalApplications> _localizer
 @using CleanArchitecture.Application.Features.ExternalApplications.Queries.GetAll
@@ -97,4 +97,4 @@ else
             <TablePager />
         </PagerContent>
     </MudTable>
-}
+} *@
