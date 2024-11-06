@@ -14,18 +14,15 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
     public class AccountService : IAccountService
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IUploadService _uploadService;
         private readonly IStringLocalizer<AccountService> _localizer;
 
         public AccountService(
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
             IUploadService uploadService,
             IStringLocalizer<AccountService> localizer)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _uploadService = uploadService;
             _localizer = localizer;
         }
@@ -75,7 +72,6 @@ namespace CleanArchitecture.Infrastructure.Services.Identity
                 }
                 var identityResult = await _userManager.UpdateAsync(user);
                 var errors = identityResult.Errors.Select(e => _localizer[e.Description].ToString()).ToList();
-                await _signInManager.RefreshSignInAsync(user);
                 return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
             }
             else

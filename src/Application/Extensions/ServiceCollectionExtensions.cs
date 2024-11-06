@@ -19,7 +19,7 @@ namespace CleanArchitecture.Application.Extensions
         public static void AddApplicationLayer(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddLocalization(options =>
             {
                 options.ResourcesPath = "Resources";

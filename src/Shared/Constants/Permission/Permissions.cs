@@ -114,8 +114,6 @@ namespace CleanArchitecture.Shared.Constants.Permission
         public static class Preferences
         {
             public const string ChangeLanguage = "Permissions.Preferences.ChangeLanguage";
-
-            //TODO - add permissions
         }
 
         [DisplayName("Dashboards")]
