@@ -12,8 +12,8 @@ Le template se base sur les outils techniques suivants:
 
 | Outils      | Version |
 |-------------|---------|
-| dotnet      | 6.0     |
-| C#          | 10      |
+| dotnet      | 8.0     |
+| C#          | 12      |
 
 ## Prise en main
 
